@@ -14,8 +14,8 @@ import { GlobalConfigModule } from './config';
   imports: [
     GlobalConfigModule,
     CandlesModule,
-    ScheduleModule.forRoot(),
     CoinsModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController, CoinsController],
   providers: [AppService, CoisService],

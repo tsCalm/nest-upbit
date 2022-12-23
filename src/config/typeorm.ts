@@ -17,9 +17,10 @@ class TypeOrmConfig {
       database: configService.get('DB_NAME'),
       entities,
       synchronize: configService.get('NODE_ENV') === 'dev',
-      logging: false,
+      logging: true,
       autoLoadEntities: true,
-      timezone: 'UTC',
+      timezone: 'z',
+      charset: 'utf8mb4',
     };
   }
 }
