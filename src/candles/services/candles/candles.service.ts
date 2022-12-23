@@ -1,16 +1,42 @@
 import { Get, Injectable, UploadedFile } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { IMinuteCandle } from 'src/candles/types';
+import { OneMinuteCandle } from 'src/typeorm';
 import { cvPriveToKo, localeDateOption } from 'src/utils/formater';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class CandlesService {
+  constructor(
+    @InjectRepository(OneMinuteCandle)
+    private readonly candleRepo: Repository<OneMinuteCandle>,
+  ) {}
   async getCandleInfo(time: string, unit: number) {
     const { data } = await axios.get(
-      `https://api.upbit.com/v1/candles/${time}/${unit}?market=KRW-AXS&count=${unit}`,
+      `https://api.upbit.com/v1/candles/${time}/3?market=KRW-MLK&count=${unit}`,
     );
-    const today = new Date();
+    // const result = await this.candleRepo.save(data);
     return data.map((obj: IMinuteCandle) => {
+      return {
+        시각: new Date(obj.candle_date_time_kst).toLocaleDateString(
+          'ko',
+          localeDateOption,
+        ),
+        누적거래금액: cvPriveToKo(obj.candle_acc_trade_price),
+        누적거래량: Math.ceil(obj.candle_acc_trade_volume),
+        종가: obj.trade_price,
+      };
+    });
+  }
+
+  async findOneMCandle() {
+    const result = await this.candleRepo.find({
+      order: {
+        candle_date_time_utc: 'DESC',
+      },
+    });
+    return result.map((obj: IMinuteCandle) => {
       return {
         시각: new Date(obj.candle_date_time_kst).toLocaleDateString(
           'ko',
