@@ -27,6 +27,9 @@ export class StrategyOrder extends BaseEntity {
   @Column({ type: 'double', nullable: false })
   sales_limit_price: number;
 
-  @Column({ type: 'double', nullable: false })
+  @Column({ type: 'double' })
   sales_price: number;
+
+  @Column({ type: 'boolean', default: false })
+  isComplete: boolean;
 }
