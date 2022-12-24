@@ -16,5 +16,5 @@ export class Coin {
   market_warning: string; //	유의 종목 여부
 
   @OneToOne(() => AttentionCoin, (attention) => attention.coin)
-  attentionCoin: AttentionCoin;
+  attention_coin: AttentionCoin;
 }

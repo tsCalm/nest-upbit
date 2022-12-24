@@ -9,6 +9,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import entities from './typeorm';
 import { CoisService } from './scheduler/coin-scheduler';
 import { GlobalConfigModule } from './config';
+import { StrategyOrderModule } from './strategy-order/strategy-order.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { GlobalConfigModule } from './config';
     CandlesModule,
     CoinsModule,
     ScheduleModule.forRoot(),
+    StrategyOrderModule,
   ],
   controllers: [AppController, CoinsController],
   providers: [AppService, CoisService],
