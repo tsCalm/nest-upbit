@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseEnumPipe, Post } from '@nestjs/common';
 import { CoinsService } from 'src/coins/services/coins/coins.service';
-import { markets } from '../../../enum';
+import { MARKETS } from '../../../enum';
 
 @Controller('coins')
 export class CoinsController {
@@ -18,7 +18,7 @@ export class CoinsController {
 
   @Post('attention/:market')
   saveAttentionCoin(
-    @Param('market', new ParseEnumPipe(markets)) market: string,
+    @Param('market', new ParseEnumPipe(MARKETS)) market: string,
   ) {
     return this.coinService.saveAttentionCoin(market);
   }

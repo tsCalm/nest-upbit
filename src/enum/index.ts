@@ -1,4 +1,4 @@
-export enum markets {
+export enum MARKETS {
   'KRW-1INCH',
   'KRW-AAVE',
   'KRW-ADA',
