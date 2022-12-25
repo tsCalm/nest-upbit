@@ -11,7 +11,7 @@
 //   candle_acc_trade_volume: number; //누적 거래량
 //   unit: number; // 분 단위(유닛)	Integer
 // }
-interface IBaseCandle {
+export interface IBaseCandle {
   market: string;
   candle_date_time_utc: Date;
   candle_date_time_kst: Date;

@@ -11,6 +11,7 @@ import { CoisService } from './scheduler/coin-scheduler';
 import { GlobalConfigModule } from './config';
 import { StrategyOrderModule } from './strategy-order/strategy-order.module';
 import { jobQueue } from './queue';
+import { TaskJob } from './queue/job';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { jobQueue } from './queue';
     StrategyOrderModule,
   ],
   controllers: [AppController, CoinsController],
-  providers: [AppService, CoisService, jobQueue],
+  providers: [AppService, CoisService, jobQueue, TaskJob],
 })
 export class AppModule {}

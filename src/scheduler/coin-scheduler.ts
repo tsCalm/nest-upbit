@@ -1,10 +1,13 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Cron } from '@nestjs/schedule';
+import { Cron, Interval } from '@nestjs/schedule';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { CoinsService } from 'src/coins/services/coins/coins.service';
 import { AttentionCoin, Coin } from '../typeorm';
 import { jobQueue } from 'src/queue';
+
+import { JOB_NAME, MARKETS } from 'src/enum';
+import { TaskJob } from 'src/queue/job';
 
 @Injectable()
 export class CoisService implements OnModuleInit {
@@ -13,12 +16,12 @@ export class CoisService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly coinService: CoinsService,
+    private readonly taskJobService: TaskJob,
     private readonly testq: jobQueue<{}>,
   ) {}
 
   async onModuleInit() {
     this.attentionCoins = await this.coinService.findAllAttentionCoin();
-    console.log(this.attentionCoins);
     // this.qService.testFunc();
   }
 
@@ -40,18 +43,73 @@ export class CoisService implements OnModuleInit {
     this.coinService.saveCoins(data);
   }
 
-  // 관심 코인이 DB에 존재하는지 매분 0초에 확인하고 scheduler 로컬변수에 추가한다.
-  @Cron('* * * * * *')
-  async modernizedAttentionCoins() {
-    // this.attentionCoins = await this.coinService.findAllAttentionCoin();
+  // 4시간에 한번씩
+  @Interval(1000 * 60 * 60 * 4)
+  async createFourHourJob() {
+    // if (this.testq.size === 0) return;
+    this.attentionCoins.forEach((coin) =>
+      // coin.coin_market
+      {
+        const job = this.taskJobService.instance(
+          JOB_NAME.HOUR_4,
+          MARKETS[coin.coin_market],
+        );
+        this.testq.enqueue(job);
+      },
+    );
   }
 
-  async attentionCoinCandleSave(markets: string[]) {
-    for (const market of markets) {
-      // https://api.upbit.com/v1/candles/days?market=KRW-BTC&count=10
-      const { data } = await axios.get(
-        `${URL}/candles/days/market=${market}&count=200`,
-      );
-    }
+  // 1시간에 한번씩
+  @Interval(1000 * 60 * 60)
+  async createOneHourJob() {
+    // if (this.testq.size === 0) return;
+    this.attentionCoins.forEach((coin) =>
+      // coin.coin_market
+      {
+        const job = this.taskJobService.instance(
+          JOB_NAME.HOUR_1,
+          MARKETS[coin.coin_market],
+        );
+        this.testq.enqueue(job);
+      },
+    );
+  }
+
+  @Interval(1000 * 60 * 30)
+  async create30MinuteJob() {
+    // if (this.testq.size === 0) return;
+    this.attentionCoins.forEach((coin) =>
+      // coin.coin_market
+      {
+        const job = this.taskJobService.instance(
+          JOB_NAME.MONUTE_30,
+          MARKETS[coin.coin_market],
+        );
+        this.testq.enqueue(job);
+      },
+    );
+  }
+  @Interval(1000 * 60 * 15)
+  async create15MinuteJob() {
+    // if (this.testq.size === 0) return;
+    this.attentionCoins.forEach((coin) =>
+      // coin.coin_market
+      {
+        const job = this.taskJobService.instance(
+          JOB_NAME.MONUTE_15,
+          MARKETS[coin.coin_market],
+        );
+        this.testq.enqueue(job);
+      },
+    );
+  }
+
+  @Cron('* * * * * *')
+  async modernizedAttentionCoins() {
+    if (this.testq.size === 0) return;
+    const job = this.testq.dequeue();
+    console.log(job);
+    console.log(this.testq.size);
+    // this.attentionCoins = await this.coinService.findAllAttentionCoin();
   }
 }
