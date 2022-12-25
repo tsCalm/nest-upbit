@@ -113,3 +113,17 @@ export enum MARKETS {
   'KRW-ZIL',
   'KRW-ZRX',
 }
+
+export enum JOB_NAME {
+  DAY,
+  WEEK,
+  MONTH,
+  HOUR_4,
+  HOUR_1,
+  MONUTE_30,
+  MONUTE_15,
+  MONUTE_10,
+  MONUTE_5,
+  MONUTE_3,
+  MONUTE_1,
+}

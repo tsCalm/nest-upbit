@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { CoinsService } from 'src/coins/services/coins/coins.service';
 import { AttentionCoin, Coin } from '../typeorm';
+import { jobQueue } from 'src/queue';
 
 @Injectable()
 export class CoisService implements OnModuleInit {
@@ -12,18 +13,20 @@ export class CoisService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly coinService: CoinsService,
+    private readonly testq: jobQueue<{}>,
   ) {}
 
   async onModuleInit() {
     this.attentionCoins = await this.coinService.findAllAttentionCoin();
     console.log(this.attentionCoins);
+    // this.qService.testFunc();
   }
 
   private async getCoinCandles(unit: number) {
     const URL = this.configService.get('UPBIT_URL');
     const { data } = await axios.get(`${URL}/market/all?isDetails=true`);
   }
-
+  // 하루에 한번 업비트 캔들 초기화 시간에 맞춰 정보를 가져온다.
   @Cron('0 9 * * * *')
   async everyDayChecker() {
     await this.getCoins();
@@ -38,9 +41,9 @@ export class CoisService implements OnModuleInit {
   }
 
   // 관심 코인이 DB에 존재하는지 매분 0초에 확인하고 scheduler 로컬변수에 추가한다.
-  @Cron('0 * * * * *')
+  @Cron('* * * * * *')
   async modernizedAttentionCoins() {
-    this.attentionCoins = await this.coinService.findAllAttentionCoin();
+    // this.attentionCoins = await this.coinService.findAllAttentionCoin();
   }
 
   async attentionCoinCandleSave(markets: string[]) {

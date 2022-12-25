@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
 import { IMinuteCandle } from 'src/candles/types';
 import { OneMinuteCandle } from 'src/typeorm';
-import { cvPriveToKo, localeDateOption } from 'src/utils/formater';
+import { cvPriveToKo, localeDateOption } from 'src/utils/formatter';
 import { Repository } from 'typeorm';
 
 @Injectable()

@@ -10,6 +10,7 @@ import entities from './typeorm';
 import { CoisService } from './scheduler/coin-scheduler';
 import { GlobalConfigModule } from './config';
 import { StrategyOrderModule } from './strategy-order/strategy-order.module';
+import { jobQueue } from './queue';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { StrategyOrderModule } from './strategy-order/strategy-order.module';
     StrategyOrderModule,
   ],
   controllers: [AppController, CoinsController],
-  providers: [AppService, CoisService],
+  providers: [AppService, CoisService, jobQueue],
 })
 export class AppModule {}
