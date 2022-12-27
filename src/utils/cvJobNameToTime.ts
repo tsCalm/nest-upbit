@@ -10,7 +10,6 @@ export const jobNameToTime = (jobName: JOB_NAME) => {
 
   if (isHour) {
     const hour = parseInt(jobName.split('_')[1]);
-    console.log(jobName);
     return ONE_HOUR * hour;
   }
 
