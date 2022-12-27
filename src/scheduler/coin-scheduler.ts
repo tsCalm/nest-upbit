@@ -1,13 +1,13 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { Cron, Interval } from '@nestjs/schedule';
+import { Cron, Interval, SchedulerRegistry } from '@nestjs/schedule';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { CoinsService } from 'src/coins/services/coins/coins.service';
 import { AttentionCoin, Coin } from '../typeorm';
 import { jobQueue } from 'src/queue';
-
 import { JOB_NAME, MARKETS } from 'src/enum';
 import { TaskJob } from 'src/queue/job';
+import { jobNameToTime } from '../utils/cvJobNameToTime';
 
 @Injectable()
 export class CoisService implements OnModuleInit {
@@ -15,14 +15,40 @@ export class CoisService implements OnModuleInit {
 
   constructor(
     private readonly configService: ConfigService,
+    private schedulerRegistry: SchedulerRegistry,
     private readonly coinService: CoinsService,
     private readonly taskJobService: TaskJob,
-    private readonly testq: jobQueue<{}>,
-  ) {}
+    private readonly jobQueue: jobQueue<{}>,
+  ) {
+    const jobNames = Object.keys(JOB_NAME);
+    // 각각의 데이터를 자동으로 가져오는 interval을 생성한다.
+    for (const jobName of jobNames) {
+      this.schedulerRegistry.addInterval(
+        jobName,
+        this.createInterval(JOB_NAME[jobName]),
+      );
+    }
+    // jobNames.forEach((key) => this.schedulerRegistry.addCronJob(key));
+  }
 
   async onModuleInit() {
     this.attentionCoins = await this.coinService.findAllAttentionCoin();
     // this.qService.testFunc();
+  }
+
+  createInterval(jobName: JOB_NAME) {
+    const time = jobNameToTime(jobName);
+    const callback = () => {
+      this.attentionCoins.forEach((coin) => {
+        const job = this.taskJobService.instance(
+          JOB_NAME[jobName],
+          MARKETS[coin.coin_market],
+        );
+        this.jobQueue.enqueue(job);
+      });
+    };
+
+    return setInterval(callback, time);
   }
 
   private async getCoinCandles(unit: number) {
@@ -43,73 +69,28 @@ export class CoisService implements OnModuleInit {
     this.coinService.saveCoins(data);
   }
 
-  // 4시간에 한번씩
-  @Interval(1000 * 60 * 60 * 4)
-  async createFourHourJob() {
-    // if (this.testq.size === 0) return;
-    this.attentionCoins.forEach((coin) =>
-      // coin.coin_market
-      {
-        const job = this.taskJobService.instance(
-          JOB_NAME.HOUR_4,
-          MARKETS[coin.coin_market],
-        );
-        this.testq.enqueue(job);
-      },
-    );
-  }
+  // // 4시간에 한번씩
+  // @Interval(1000 * 60 * 60 * 4)
+  // async createFourHourJob() {
+  //   // if (this.jobQueue.size === 0) return;
+  //   this.attentionCoins.forEach((coin) =>
+  //     // coin.coin_market
+  //     {
+  //       const job = this.taskJobService.instance(
+  //         JOB_NAME.HOUR_4,
+  //         MARKETS[coin.coin_market],
+  //       );
+  //       this.jobQueue.enqueue(job);
+  //     },
+  //   );
+  // }
 
-  // 1시간에 한번씩
-  @Interval(1000 * 60 * 60)
-  async createOneHourJob() {
-    // if (this.testq.size === 0) return;
-    this.attentionCoins.forEach((coin) =>
-      // coin.coin_market
-      {
-        const job = this.taskJobService.instance(
-          JOB_NAME.HOUR_1,
-          MARKETS[coin.coin_market],
-        );
-        this.testq.enqueue(job);
-      },
-    );
-  }
-
-  @Interval(1000 * 60 * 30)
-  async create30MinuteJob() {
-    // if (this.testq.size === 0) return;
-    this.attentionCoins.forEach((coin) =>
-      // coin.coin_market
-      {
-        const job = this.taskJobService.instance(
-          JOB_NAME.MONUTE_30,
-          MARKETS[coin.coin_market],
-        );
-        this.testq.enqueue(job);
-      },
-    );
-  }
-  @Interval(1000 * 60 * 15)
-  async create15MinuteJob() {
-    // if (this.testq.size === 0) return;
-    this.attentionCoins.forEach((coin) =>
-      // coin.coin_market
-      {
-        const job = this.taskJobService.instance(
-          JOB_NAME.MONUTE_15,
-          MARKETS[coin.coin_market],
-        );
-        this.testq.enqueue(job);
-      },
-    );
-  }
-
-  @Cron('* * * * * *')
-  async modernizedAttentionCoins() {
-    if (this.testq.size === 0) return;
-    const job = this.testq.dequeue();
-    console.log(job);
-    console.log(this.testq.size);
-    // this.attentionCoins = await this.coinService.findAllAttentionCoin();
-  }
+  // @Cron('* * * * * *')
+  // async modernizedAttentionCoins() {
+  //   if (this.jobQueue.size === 0) return;
+  //   const job = this.jobQueue.dequeue();
+  //   console.log(job);
+  //   console.log(this.jobQueue.size);
+  //   // this.attentionCoins = await this.coinService.findAllAttentionCoin();
+  // }
 }
