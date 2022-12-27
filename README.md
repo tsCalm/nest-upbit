@@ -1,16 +1,14 @@
-## obj keys
+## 프로젝트 목표
 
-'market',
-'candle_date_time_utc',
-'candle_date_time_kst',
-'opening_price' : 캔들 시가,
-'high_price' : 캔들 고가,
-'low_price' : 캔들 저가,
-'trade_price' : 트레이딩 가격 ,
-'timestamp',
-'candle_acc_trade_price' : 해당 캔들 누적거래 금액,
-'candle_acc_trade_volume' : 해당 캔들 누적거래량,
-'unit'
+1. 내가 차트를 확인하는 시간을 줄인다.
+2. 사람의 감정을 배제하고 매수, 매도할 수 있다. ( 실수할 확률이 낮아진다)
+3. 자고 있는 시간 급락을 하는 경우 자동 손절 처리
+4. 확인하고 있지 않는 시간에 값자기 가격이 오르는 경우 자동으로 매도 처리
+5. 내가 확인하고 싶은 데이터들만 골라서 확인할 수 있는 api를 제작한다. (optional)
+
+- 예) 매주 목요일 오전 1시의 데이터만 보고 싶은 경우
+- 예) 해당 코인이 주로 오르는 시간을 알고 싶을 경우
+- 예) 상승 전 거래량 또는 거래 금액의 크기로 상승을 포착한다.
 
 ## 계획
 
@@ -32,3 +30,7 @@
 분할 매수를 할 수 있도록 지원해야한다.
 
 - redis(in memory database - cache) 요약 : database보다 더 빠른 메모리(DRAM일 확률이 높음)에 자주 접근하고 덜 바뀌는 데이터를 저장하자!
+
+- app에서 자동으로 처리하는 일을 taskJob이라는 클래스로 만들고 jobQueue를 만들어 scheduler가 매초 작업이 있는지 확인하고 작업이 있다면 자동으로 처리하도록 함
+
+- scheduler 선언에 있어 중복되는 코드가 너무 많아 방법을 생각중
