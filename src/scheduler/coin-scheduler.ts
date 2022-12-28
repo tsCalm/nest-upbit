@@ -8,6 +8,7 @@ import { jobQueue } from 'src/queue';
 import { JOB_NAME, MARKETS } from 'src/enum';
 import { TaskJob } from 'src/queue/job';
 import { jobNameToTime } from '../utils/cvJobNameToTime';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class CoisService implements OnModuleInit {
@@ -19,7 +20,11 @@ export class CoisService implements OnModuleInit {
     private readonly coinService: CoinsService,
     private readonly taskJobService: TaskJob,
     private readonly jobQueue: jobQueue<TaskJob>,
-  ) {
+    private eventEmitter: EventEmitter2,
+  ) {}
+
+  async onModuleInit() {
+    this.attentionCoins = await this.coinService.findAllAttentionCoin();
     const jobNames = Object.keys(JOB_NAME);
     // 각각의 데이터를 자동으로 가져오는 interval을 생성한다.
     for (const jobName of jobNames) {
@@ -30,11 +35,6 @@ export class CoisService implements OnModuleInit {
     }
   }
 
-  async onModuleInit() {
-    this.attentionCoins = await this.coinService.findAllAttentionCoin();
-    // this.qService.testFunc();
-  }
-
   createInterval(jobName: JOB_NAME) {
     const time = jobNameToTime(jobName);
     const callback = () => {
@@ -43,7 +43,6 @@ export class CoisService implements OnModuleInit {
           JOB_NAME[jobName],
           MARKETS[coin.coin_market],
         );
-        console.log('job : ', job);
         this.jobQueue.enqueue(job);
       });
     };
@@ -55,7 +54,6 @@ export class CoisService implements OnModuleInit {
   @Cron('0 9 * * * *')
   async everyDayChecker() {
     await this.getCoins();
-    if (this.attentionCoins.length === 0) return;
   }
 
   // 코인 종류 및 코인 정보를 upbit에서 받아와 저장한다.
@@ -70,7 +68,6 @@ export class CoisService implements OnModuleInit {
     if (this.jobQueue.size === 0) return;
     const job = this.jobQueue.dequeue();
     await job.getCandleInfo();
-    console.log(job);
     // this.attentionCoins = await this.coinService.findAllAttentionCoin();
   }
 }

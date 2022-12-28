@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Coin, AttentionCoin } from '../../../typeorm';
 import { Repository } from 'typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class CoinsService {
@@ -9,13 +10,18 @@ export class CoinsService {
     @InjectRepository(Coin) private readonly coinRepo: Repository<Coin>,
     @InjectRepository(AttentionCoin)
     private readonly attentionCoinRepo: Repository<AttentionCoin>,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   // 스케줄러에서 사용
   async saveCoins(coins: Coin[] = []) {
     const fCoins = coins.filter((coin) => coin.market.includes('KRW'));
     await this.coinRepo.save(fCoins);
-    console.log('코인 정보 저장 완료');
+  }
+
+  // eventListener에서 감지하기 위한 이벤트를 정의
+  async createUpdatedEvent() {
+    this.eventEmitter.emit('attention.updated', {});
   }
 
   // 모든 코인 목록
@@ -25,6 +31,7 @@ export class CoinsService {
 
   // 관심 코인 목록
   findAllAttentionCoin() {
+    this.createUpdatedEvent();
     return this.attentionCoinRepo.find();
   }
 
