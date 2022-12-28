@@ -12,26 +12,19 @@ import axios from 'axios';
 
 @Injectable()
 export class TaskJob {
-  jobName: JOB_NAME;
+  jobName: string;
   queryParam: string = '';
   coinName: MARKETS;
 
-  constructor(private readonly configService: ConfigService) {}
+  // constructor(private readonly configService: ConfigService) {}
 
-  instance(jobName: JOB_NAME, coinName: MARKETS): TaskJob {
+  instance(jobName: string, coinName: MARKETS): TaskJob {
     Object.assign(this, { jobName, coinName });
     this.createqueryParam();
-    return this;
+    return { ...this };
   }
 
-  public async getCandleInfo(): Promise<Partial<IBaseCandle>[]> {
-    const URL = this.configService.get('UPBIT_URL');
-    const { data } = await axios.get(`${URL}/${this.queryParam}`);
-    return data;
-  }
-  public saveCandle(): void {}
-
-  createqueryParam() {
+  private createqueryParam() {
     const queryParamList = {
       // DAY: `days?market=KRW-BTC&count=10`
       DAY: `days?market=${this.coinName}`,

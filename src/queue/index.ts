@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class jobQueue<T> {
+export class JobQueue<T> {
   array = [];
 
   get size() {
@@ -14,5 +14,9 @@ export class jobQueue<T> {
 
   public dequeue(): T {
     return this.array.shift(); // 첫번째 요소를 반환하고 제거한다.
+  }
+
+  public getJob() {
+    return this.array;
   }
 }

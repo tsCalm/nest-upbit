@@ -1,16 +1,17 @@
 import { Get, Injectable, UploadedFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import axios from 'axios';
-import { IMinuteCandle } from 'src/candles/types';
-import { OneMinuteCandle } from 'src/typeorm';
+import { IBaseCandle, IMinuteCandle } from 'src/candles/types';
+import { JOB_NAME } from 'src/enum';
+import { Candle } from 'src/typeorm';
 import { cvPriveToKo, localeDateOption } from 'src/utils/formatter';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class CandlesService {
   constructor(
-    @InjectRepository(OneMinuteCandle)
-    private readonly candleRepo: Repository<OneMinuteCandle>,
+    @InjectRepository(Candle)
+    private readonly candleRepo: Repository<Candle>,
   ) {}
   async getCandleInfo(time: string, unit: number) {
     const { data } = await axios.get(
@@ -47,5 +48,9 @@ export class CandlesService {
         종가: obj.trade_price,
       };
     });
+  }
+
+  async saveCandles(candles: Partial<IBaseCandle>[], jobName: JOB_NAME) {
+    await this.candleRepo.save({ ...candles, candle_type: jobName });
   }
 }

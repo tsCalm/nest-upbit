@@ -1,10 +1,10 @@
 import { Coin } from './coin';
-import { OneMinuteCandle } from './minuts';
+import { Candle } from './minuts';
 import { AttentionCoin } from './attention-coin';
 import { StrategyOrder } from './strategy-order';
 
-const entities = [OneMinuteCandle, Coin, AttentionCoin, StrategyOrder];
+const entities = [Candle, Coin, AttentionCoin, StrategyOrder];
 
-export { OneMinuteCandle, AttentionCoin, Coin, StrategyOrder };
+export { Candle, AttentionCoin, Coin, StrategyOrder };
 
 export default entities;

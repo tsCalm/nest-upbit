@@ -24,9 +24,9 @@ export interface IBaseCandle {
   candle_acc_trade_volume: number; //default
   first_day_of_period: string; // week, month
   prev_closing_price: number; //day
-  change_price: number; //day
-  change_rate: number; //day
-  converted_trade_price?: number; //day
+  change_price: number;
+  change_rate: number;
+  converted_trade_price?: number;
   unit: number; // minute
 }
 

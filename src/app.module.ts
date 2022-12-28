@@ -9,10 +9,11 @@ import entities from './typeorm';
 import { CoisService } from './scheduler/coin-scheduler';
 import { GlobalConfigModule } from './config';
 import { StrategyOrderModule } from './strategy-order/strategy-order.module';
-import { jobQueue } from './queue';
+import { JobQueue } from './queue';
 import { TaskJob } from './queue/job';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AttentionListener } from './listener/attention.listener';
+import { CandlesService } from './candles/services/candles/candles.service';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { AttentionListener } from './listener/attention.listener';
     StrategyOrderModule,
   ],
   controllers: [AppController],
-  providers: [AppService, CoisService, jobQueue, TaskJob, AttentionListener],
+  providers: [AppService, CoisService, JobQueue, TaskJob, AttentionListener],
 })
 export class AppModule {}
