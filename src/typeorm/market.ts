@@ -15,6 +15,6 @@ export class Market {
   @Column({ type: 'varchar', nullable: true, default: null })
   market_warning: string; //	유의 종목 여부
 
-  @OneToOne(() => AttentionMarket, (attention) => attention.coin)
+  @OneToOne(() => AttentionMarket, (attention) => attention.market)
   attention_coin: AttentionMarket;
 }

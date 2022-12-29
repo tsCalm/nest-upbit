@@ -18,7 +18,7 @@ class TypeOrmConfig {
       entities,
       synchronize: true,
       // configService.get('NODE_ENV') === 'dev',
-      logging: true,
+      logging: false,
       autoLoadEntities: true,
       timezone: 'z',
       charset: 'utf8mb4',

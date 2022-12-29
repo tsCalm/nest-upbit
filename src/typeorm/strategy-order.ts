@@ -12,7 +12,7 @@ import { BaseEntity } from './default';
 @Entity()
 export class StrategyOrder extends BaseEntity {
   @ManyToOne(() => AttentionMarket, (coin) => coin.strategy_orders, {})
-  @JoinColumn({ name: 'attention_coin_id' })
+  @JoinColumn({ name: 'attention_market_id' })
   attention_coin: AttentionMarket;
 
   @Column({ type: 'double', nullable: false })

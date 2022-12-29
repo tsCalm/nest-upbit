@@ -9,7 +9,7 @@ export class AttentionMarket extends BaseEntity {
     cascade: false,
   })
   @JoinColumn({ name: 'coin_market' })
-  coin: Market;
+  market: Market;
 
   @OneToMany(() => StrategyOrder, (stg) => stg.attention_coin)
   strategy_orders: StrategyOrder[];
