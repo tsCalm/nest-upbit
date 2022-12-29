@@ -2,7 +2,7 @@ import { Controller, Get, Param, ParseEnumPipe, Post } from '@nestjs/common';
 import { CoinsService } from 'src/coins/services/coins/coins.service';
 import { MARKETS } from '../../../enum';
 
-@Controller('coins')
+@Controller('markets')
 export class CoinsController {
   constructor(private readonly coinService: CoinsService) {}
 

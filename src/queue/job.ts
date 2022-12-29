@@ -39,6 +39,6 @@ export class TaskJob {
       MINUTE_3: `minutes/3?market=${this.coinName}`,
       MINUTE_1: `minutes/1?market=${this.coinName}`,
     };
-    this.queryParam = `candles/${queryParamList[this.jobName]}&count=10`;
+    this.queryParam = `candles/${queryParamList[this.jobName]}&count=1`;
   }
 }

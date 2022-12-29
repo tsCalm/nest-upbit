@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Coin, AttentionCoin } from '../typeorm';
-import { CoinsService } from './services/coins/coins.service';
-import { CoinsController } from './controllers/coins/coins.controller';
 import { AttentionCoinsController } from './controllers/coins/attention-coins.controller';
+import { CoinsController } from './controllers/coins/coins.controller';
+import { CoinsService } from './services/coins/coins.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Coin, AttentionCoin])],
