@@ -1,8 +1,8 @@
 import { Column, Entity, OneToOne, PrimaryColumn } from 'typeorm';
-import { AttentionCoin } from './attention-coin';
+import { AttentionMarket } from './attention-market';
 
 @Entity()
-export class Coin {
+export class Market {
   @PrimaryColumn({ type: 'varchar', default: '' })
   market: string; // 업비트에서 제공중인 시장 정보	String
 
@@ -15,6 +15,6 @@ export class Coin {
   @Column({ type: 'varchar', nullable: true, default: null })
   market_warning: string; //	유의 종목 여부
 
-  @OneToOne(() => AttentionCoin, (attention) => attention.coin)
-  attention_coin: AttentionCoin;
+  @OneToOne(() => AttentionMarket, (attention) => attention.coin)
+  attention_coin: AttentionMarket;
 }

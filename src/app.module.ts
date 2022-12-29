@@ -13,7 +13,7 @@ import { TaskJob } from './queue/job';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AttentionListener } from './listener/attention.listener';
 import { CandlesService } from './candles/services/candles/candles.service';
-import { CoinsModule } from './coins/coins.module';
+import { MarketsModule } from './markets/coins.module';
 import { AttentionMarketsQueue } from './queue/attention-market';
 import { UpbitApi } from './common/upbit-api';
 
@@ -21,7 +21,7 @@ import { UpbitApi } from './common/upbit-api';
   imports: [
     GlobalConfigModule,
     CandlesModule,
-    CoinsModule,
+    MarketsModule,
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     StrategyOrderModule,

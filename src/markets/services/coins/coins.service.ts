@@ -1,20 +1,20 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Coin, AttentionCoin } from '../../../typeorm';
+import { Market, AttentionMarket } from '../../../typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class CoinsService {
   constructor(
-    @InjectRepository(Coin) private readonly coinRepo: Repository<Coin>,
-    @InjectRepository(AttentionCoin)
-    private readonly attentionCoinRepo: Repository<AttentionCoin>,
+    @InjectRepository(Market) private readonly coinRepo: Repository<Market>,
+    @InjectRepository(AttentionMarket)
+    private readonly attentionCoinRepo: Repository<AttentionMarket>,
     private eventEmitter: EventEmitter2,
   ) {}
 
   // 스케줄러에서 사용
-  async saveCoins(markets: Coin[] = []) {
+  async saveCoins(markets: Market[] = []) {
     const fCoins = markets.filter((coin) => coin.market.includes('KRW'));
     await this.coinRepo.save(fCoins);
   }

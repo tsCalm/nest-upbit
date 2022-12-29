@@ -1,17 +1,22 @@
 import { Controller, Get, Param, ParseEnumPipe, Post } from '@nestjs/common';
-import { CoinsService } from 'src/coins/services/coins/coins.service';
+import { CoinsService } from 'src/markets/services/coins/coins.service';
 import { MARKETS } from '../../../enum';
 
-@Controller('markets/attention')
-export class AttentionCoinsController {
+@Controller('markets')
+export class CoinsController {
   constructor(private readonly coinService: CoinsService) {}
 
   @Get('')
+  getCoins() {
+    return this.coinService.findAll();
+  }
+
+  @Get('attention')
   getAttentionCoins() {
     return this.coinService.findAllAttentionCoin();
   }
 
-  @Post(':market')
+  @Post('attention/:market')
   saveAttentionCoin(
     @Param('market', new ParseEnumPipe(MARKETS)) market: string,
   ) {

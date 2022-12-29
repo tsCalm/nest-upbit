@@ -3,7 +3,7 @@ import { IBaseCandle } from '../candles/types';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { AttentionCoin } from 'src/typeorm';
+import { AttentionMarket } from 'src/typeorm';
 
 // export interface IJob {
 //   jobName: JOB_NAME;
