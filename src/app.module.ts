@@ -8,13 +8,12 @@ import entities from './typeorm';
 import { CoinScheduler } from './scheduler/coin-scheduler';
 import { GlobalConfigModule } from './config';
 import { StrategyOrderModule } from './strategy-order/strategy-order.module';
-import { JobQueue } from './queue';
+import { Queue } from './queue';
 import { TaskJob } from './queue/job';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { AttentionListener } from './listener/attention.listener';
 import { CandlesService } from './candles/services/candles/candles.service';
 import { MarketsModule } from './markets/coins.module';
-import { AttentionMarketsQueue } from './queue/attention-market';
 import { UpbitApi } from './common/upbit-api';
 
 @Module({
@@ -31,8 +30,7 @@ import { UpbitApi } from './common/upbit-api';
     AppService,
     CoinScheduler,
     UpbitApi,
-    JobQueue,
-    AttentionMarketsQueue,
+    Queue,
     TaskJob,
     AttentionListener,
   ],

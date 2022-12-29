@@ -4,7 +4,7 @@ import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import axios from 'axios';
 import { IBaseCandle } from 'src/candles/types';
-import { JobQueue } from 'src/queue';
+import { Queue } from 'src/queue';
 import { TaskJob } from 'src/queue/job';
 import { AttentionMarket, Market } from 'src/typeorm';
 

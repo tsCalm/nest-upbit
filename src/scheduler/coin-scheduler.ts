@@ -3,7 +3,7 @@ import { Cron, Interval, SchedulerRegistry } from '@nestjs/schedule';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { AttentionMarket, Market } from '../typeorm';
-import { JobQueue } from 'src/queue';
+import { Queue } from 'src/queue';
 import { JOB_NAME, MARKETS } from 'src/enum';
 import { TaskJob } from 'src/queue/job';
 import { jobNameToTime } from '../utils/cvJobNameToTime';
@@ -11,7 +11,6 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IBaseCandle } from 'src/candles/types';
 import { CandlesService } from 'src/candles/services/candles/candles.service';
 import { CoinsService } from 'src/markets/services/coins/coins.service';
-import { AttentionMarketsQueue } from 'src/queue/attention-market';
 import { UpbitApi } from 'src/common/upbit-api';
 
 @Injectable()
@@ -25,14 +24,15 @@ export class CoinScheduler implements OnModuleInit {
     private readonly upbitApi: UpbitApi,
     private readonly taskJobService: TaskJob,
     private readonly candlesService: CandlesService,
-    private readonly jobQueue: JobQueue<TaskJob>,
-    private readonly attentionMarketService: AttentionMarketsQueue<AttentionMarket>,
+    private readonly jobQueue: Queue<TaskJob>,
+    private readonly attentionMarketService: Queue<AttentionMarket>,
     private eventEmitter: EventEmitter2,
   ) {}
 
   async onModuleInit() {
-    const attentionCoins = await this.coinService.findAllAttentionCoin();
-    this.attentionMarketService.registMarkets(attentionCoins);
+    const attentionCoins: AttentionMarket[] =
+      await this.coinService.findAllAttentionCoin();
+    this.attentionMarketService.array = attentionCoins;
     const markets = await this.upbitApi.getMarkets();
     await this.coinService.saveCoins(markets);
     this.markets = await this.coinService.findAll();
@@ -65,7 +65,7 @@ export class CoinScheduler implements OnModuleInit {
   async everySecondChecker() {
     console.log('****');
     console.log(new Date());
-    console.log(this.attentionMarketService.getList());
+    console.log(this.attentionMarketService.array);
     console.log('****');
     // await this.getCoins();
   }
@@ -75,11 +75,11 @@ export class CoinScheduler implements OnModuleInit {
     // await this.getCoins();
   }
 
-  @Interval(300)
-  async startJob() {
-    if (this.jobQueue.size === 0) return;
-    // const job = this.jobQueue.dequeue();
-    // const candles = await this.getCandleInfo(job);
-    // await this.candlesService.saveCandles(candles, JOB_NAME[job.jobName]);
-  }
+  // @Interval(300)
+  // async startJob() {
+  //   if (this.jobQueue.size === 0) return;
+  // const job = this.jobQueue.dequeue();
+  // const candles = await this.getCandleInfo(job);
+  // await this.candlesService.saveCandles(candles, JOB_NAME[job.jobName]);
+  // }
 }
