@@ -63,7 +63,10 @@ export class CoinScheduler implements OnModuleInit {
   // 하루에 한번 업비트 캔들 초기화 시간에 맞춰 정보를 가져온다.
   @Cron('* * * * * *')
   async everySecondChecker() {
+    console.log('****');
+    console.log(new Date());
     console.log(this.attentionMarketService.getList());
+    console.log('****');
     // await this.getCoins();
   }
 

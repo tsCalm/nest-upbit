@@ -20,8 +20,11 @@ export class CoinsService {
   }
 
   // eventListener에서 감지하기 위한 이벤트를 정의
-  async createUpdatedEvent(attentionMarket: AttentionMarket[]) {
-    this.eventEmitter.emit('attention.updated', attentionMarket);
+  async createUpdatedEvent(
+    eventName: string,
+    attentionMarket: AttentionMarket,
+  ) {
+    this.eventEmitter.emit(`attention.${eventName}`, attentionMarket);
   }
 
   // 모든 코인 목록
@@ -44,17 +47,20 @@ export class CoinsService {
   // 관심 코인 등록 및 삭제
   async saveAttentionCoin(market: string) {
     const validateMarket = await this.findAttentionCoin(market);
-    console.log('validateMarket : ', validateMarket);
+    let eventName = 'create';
+    let eventVal = validateMarket;
     // 이미 관심코인인 경우 관심코인 목록에서 제거
     if (validateMarket) {
       await this.attentionCoinRepo.delete(validateMarket.id);
+      eventName = 'delete';
     } else {
       const newAttention = this.attentionCoinRepo.create({
         coin_market: market,
       });
-      await this.attentionCoinRepo.save(newAttention);
+      eventVal = await this.attentionCoinRepo.save(newAttention);
     }
     const attentionMarkets = await this.findAllAttentionCoin();
-    this.createUpdatedEvent(attentionMarkets);
+    this.createUpdatedEvent(eventName, eventVal);
+    return attentionMarkets;
   }
 }
