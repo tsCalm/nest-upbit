@@ -19,7 +19,7 @@ export class AttentionListener {
 
   @OnEvent('attention.create')
   handleAttentionCreate(attentionMarket: AttentionMarket) {
-    const jobName = ['DAY', 'WEEK', 'MONTH'];
+    // const jobName = ['DAY', 'WEEK', 'MONTH'];
     const market = attentionMarket.coin_market;
     this.attentionMarketsQueue.enqueue(attentionMarket);
   }

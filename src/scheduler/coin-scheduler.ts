@@ -19,15 +19,15 @@ export class CoinScheduler implements OnModuleInit {
   private markets: Market[] = [];
 
   constructor(
+    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJob>,
+    @Inject(ATTENTION_MARKET)
+    private readonly attentionMarketService: Queue<AttentionMarket>,
     private readonly configService: ConfigService,
     private schedulerRegistry: SchedulerRegistry,
     private readonly coinService: CoinsService,
     private readonly upbitApi: UpbitApi,
     private readonly taskJobService: TaskJob,
     private readonly candlesService: CandlesService,
-    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJob>,
-    @Inject(ATTENTION_MARKET)
-    private readonly attentionMarketService: Queue<AttentionMarket>,
     private eventEmitter: EventEmitter2,
   ) {}
 
