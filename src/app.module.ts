@@ -30,7 +30,14 @@ import { UpbitApi } from './common/upbit-api';
     AppService,
     CoinScheduler,
     UpbitApi,
-    Queue,
+    {
+      provide: 'ATTENTION_MARKET',
+      useClass: Queue,
+    },
+    {
+      provide: 'TASK_JOB',
+      useClass: Queue,
+    },
     TaskJob,
     AttentionListener,
   ],

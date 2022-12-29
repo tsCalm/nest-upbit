@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Cron, Interval, SchedulerRegistry } from '@nestjs/schedule';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
@@ -6,7 +6,7 @@ import { AttentionMarket, Market } from '../typeorm';
 import { Queue } from 'src/queue';
 import { JOB_NAME, MARKETS } from 'src/enum';
 import { TaskJob } from 'src/queue/job';
-import { jobNameToTime } from '../utils/cvJobNameToTime';
+import { jobNameToTime } from '../utils/task-job-function';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { IBaseCandle } from 'src/candles/types';
 import { CandlesService } from 'src/candles/services/candles/candles.service';
@@ -24,7 +24,8 @@ export class CoinScheduler implements OnModuleInit {
     private readonly upbitApi: UpbitApi,
     private readonly taskJobService: TaskJob,
     private readonly candlesService: CandlesService,
-    private readonly jobQueue: Queue<TaskJob>,
+    @Inject('TASK_JOB') private readonly jobQueue: Queue<TaskJob>,
+    @Inject('ATTENTION_MARKET')
     private readonly attentionMarketService: Queue<AttentionMarket>,
     private eventEmitter: EventEmitter2,
   ) {}
@@ -65,7 +66,8 @@ export class CoinScheduler implements OnModuleInit {
   async everySecondChecker() {
     console.log('****');
     console.log(new Date());
-    console.log(this.attentionMarketService.array);
+    console.log('job task : ', this.jobQueue.array);
+    console.log('attention market : ', this.attentionMarketService.array);
     console.log('****');
     // await this.getCoins();
   }

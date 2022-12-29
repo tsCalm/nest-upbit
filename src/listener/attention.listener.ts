@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { UpbitApi } from 'src/common/upbit-api';
@@ -9,12 +9,17 @@ import { AttentionMarket } from 'src/typeorm';
 @Injectable()
 export class AttentionListener {
   constructor(
-    private attentionMarketsQueue: Queue<AttentionMarket>,
+    @Inject('ATTENTION_MARKET')
+    private readonly attentionMarketsQueue: Queue<AttentionMarket>,
+    @Inject('TASK_JOB') private readonly jobQueue: Queue<TaskJob>,
+    private readonly taskJobService: TaskJob,
     private readonly upbitApi: UpbitApi,
   ) {}
 
   @OnEvent('attention.create')
   handleAttentionCreate(attentionMarket: AttentionMarket) {
+    const jobName = ['DAY', 'WEEK', 'MONTH'];
+    const market = attentionMarket.coin_market;
     this.attentionMarketsQueue.enqueue(attentionMarket);
   }
 
