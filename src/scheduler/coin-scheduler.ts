@@ -12,6 +12,7 @@ import { IBaseCandle } from 'src/candles/types';
 import { CandlesService } from 'src/candles/services/candles/candles.service';
 import { CoinsService } from 'src/markets/services/coins/coins.service';
 import { UpbitApi } from 'src/common/upbit-api';
+import { TASK_JOB, ATTENTION_MARKET } from '../const';
 
 @Injectable()
 export class CoinScheduler implements OnModuleInit {
@@ -24,8 +25,8 @@ export class CoinScheduler implements OnModuleInit {
     private readonly upbitApi: UpbitApi,
     private readonly taskJobService: TaskJob,
     private readonly candlesService: CandlesService,
-    @Inject('TASK_JOB') private readonly jobQueue: Queue<TaskJob>,
-    @Inject('ATTENTION_MARKET')
+    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJob>,
+    @Inject(ATTENTION_MARKET)
     private readonly attentionMarketService: Queue<AttentionMarket>,
     private eventEmitter: EventEmitter2,
   ) {}

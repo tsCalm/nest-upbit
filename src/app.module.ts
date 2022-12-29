@@ -15,6 +15,7 @@ import { AttentionListener } from './listener/attention.listener';
 import { CandlesService } from './candles/services/candles/candles.service';
 import { MarketsModule } from './markets/coins.module';
 import { UpbitApi } from './common/upbit-api';
+import { TASK_JOB, ATTENTION_MARKET } from './const';
 
 @Module({
   imports: [
@@ -31,11 +32,11 @@ import { UpbitApi } from './common/upbit-api';
     CoinScheduler,
     UpbitApi,
     {
-      provide: 'ATTENTION_MARKET',
+      provide: ATTENTION_MARKET,
       useClass: Queue,
     },
     {
-      provide: 'TASK_JOB',
+      provide: TASK_JOB,
       useClass: Queue,
     },
     TaskJob,

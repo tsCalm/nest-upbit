@@ -5,13 +5,14 @@ import { UpbitApi } from 'src/common/upbit-api';
 import { Queue } from 'src/queue';
 import { TaskJob } from 'src/queue/job';
 import { AttentionMarket } from 'src/typeorm';
+import { TASK_JOB, ATTENTION_MARKET } from '../const';
 
 @Injectable()
 export class AttentionListener {
   constructor(
-    @Inject('ATTENTION_MARKET')
+    @Inject(ATTENTION_MARKET)
     private readonly attentionMarketsQueue: Queue<AttentionMarket>,
-    @Inject('TASK_JOB') private readonly jobQueue: Queue<TaskJob>,
+    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJob>,
     private readonly taskJobService: TaskJob,
     private readonly upbitApi: UpbitApi,
   ) {}
