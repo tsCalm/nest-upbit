@@ -78,8 +78,8 @@ export class CoisService implements OnModuleInit {
     if (this.jobQueue.size === 0) return;
     const job = this.jobQueue.dequeue();
     const candles = await this.getCandleInfo(job);
+    console.log(candles);
     await this.candlesService.saveCandles(candles, JOB_NAME[job.jobName]);
-    console.log(this.jobQueue.size);
     // console.log('job : ', job.coinName);
     // await job.getCandleInfo();
   }
