@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Market, AttentionMarket } from '../../../typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { UpbitApi } from 'src/common/upbit-api';
 
 @Injectable()
 export class CoinsService {
@@ -11,6 +12,7 @@ export class CoinsService {
     @InjectRepository(AttentionMarket)
     private readonly attentionCoinRepo: Repository<AttentionMarket>,
     private eventEmitter: EventEmitter2,
+    private readonly upbitApi: UpbitApi,
   ) {}
 
   // 스케줄러에서 사용
@@ -44,6 +46,7 @@ export class CoinsService {
       },
     });
   }
+
   // 관심 코인 등록 및 삭제
   async saveAttentionCoin(market: string) {
     const validateMarket = await this.findAttentionCoin(market);

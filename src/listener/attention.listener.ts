@@ -9,19 +9,14 @@ import { AttentionMarket } from 'src/typeorm';
 
 @Injectable()
 export class AttentionListener {
-  autoCandleList = ['days', 'weeks', 'months'];
   constructor(
-    private jobQueue: JobQueue<TaskJob>,
     private attentionMarketsQueue: AttentionMarketsQueue<AttentionMarket>,
-    private schedulerRegistry: SchedulerRegistry,
     private readonly upbitApi: UpbitApi,
   ) {}
 
   @OnEvent('attention.create')
   handleAttentionCreate(attentionMarket: AttentionMarket) {
     this.attentionMarketsQueue.enqueue(attentionMarket);
-    // const temp = this.schedulerRegistry.getIntervals();
-    // const jobs = this.jobQueue.getJob();
   }
 
   @OnEvent('attention.delete')
