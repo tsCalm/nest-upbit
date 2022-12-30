@@ -15,7 +15,7 @@ import { AttentionListener } from './listener/attention.listener';
 import { CandlesService } from './candles/services/candles/candles.service';
 import { MarketsModule } from './markets/coins.module';
 import { UpbitApi } from './common/upbit-api';
-import { TASK_JOB, ATTENTION_MARKET } from './const';
+import { TASK_JOB_WRAPPER, ATTENTION_MARKET } from './const';
 import { TaskJobWrapper } from './queue/job-wrapper';
 
 @Module({
@@ -37,7 +37,7 @@ import { TaskJobWrapper } from './queue/job-wrapper';
       useClass: Queue,
     },
     {
-      provide: TASK_JOB,
+      provide: TASK_JOB_WRAPPER,
       useClass: Queue,
     },
     TaskJobWrapper,

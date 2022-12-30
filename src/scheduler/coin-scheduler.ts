@@ -12,14 +12,15 @@ import { IBaseCandle } from 'src/candles/types';
 import { CandlesService } from 'src/candles/services/candles/candles.service';
 import { CoinsService } from 'src/markets/services/coins/coins.service';
 import { UpbitApi } from 'src/common/upbit-api';
-import { TASK_JOB, ATTENTION_MARKET } from '../const';
+import { TASK_JOB_WRAPPER, ATTENTION_MARKET } from '../const';
+import { TaskJobWrapper } from 'src/queue/job-wrapper';
 
 @Injectable()
 export class CoinScheduler implements OnModuleInit {
   private markets: Market[] = [];
 
   constructor(
-    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJob>,
+    @Inject(TASK_JOB_WRAPPER) private readonly jobQueue: Queue<TaskJobWrapper>,
     @Inject(ATTENTION_MARKET)
     private readonly attentionMarketService: Queue<AttentionMarket>,
     private readonly configService: ConfigService,
@@ -27,6 +28,7 @@ export class CoinScheduler implements OnModuleInit {
     private readonly coinService: CoinsService,
     private readonly upbitApi: UpbitApi,
     private readonly taskJobService: TaskJob,
+    private readonly jobWrapper: TaskJobWrapper,
     private readonly candlesService: CandlesService,
     private eventEmitter: EventEmitter2,
   ) {}
@@ -38,29 +40,41 @@ export class CoinScheduler implements OnModuleInit {
     const markets = await this.upbitApi.getMarkets();
     await this.coinService.saveCoins(markets);
     this.markets = await this.coinService.findAll();
-    // const jobNames = Object.keys(JOB_NAME);
-    // 각각의 데이터를 자동으로 가져오는 interval을 생성한다.
-    // for (const jobName of jobNames) {
-    //   this.schedulerRegistry.addInterval(
-    //     jobName,
-    //     this.createInterval(JOB_NAME[jobName]),
-    //   );
-    // }
+  }
+  // 스케줄러 작업 추가 함수
+  addJobWrapper(keys: JOB_NAME[], order: number = 3) {
+    const attentionMarkets = this.attentionMarketService.array.map(
+      (obj) => obj.coin_market,
+    );
+    attentionMarkets.forEach((market) => {
+      const jobs = keys.map((key) =>
+        this.taskJobService.instance(JOB_NAME[key], MARKETS[market]),
+      );
+      const jobInstance = this.jobWrapper.instance(jobs, 2);
+      this.jobQueue.enqueue(jobInstance);
+      this.jobQueue.jobSort();
+    });
   }
 
-  // createInterval(jobName: JOB_NAME) {
-  //   const time = jobNameToTime(jobName);
-  //   const callback = () => {
-  //     for (const coin of this.attentionCoins) {
-  //       const job = this.taskJobService.instance(
-  //         JOB_NAME[jobName],
-  //         MARKETS[coin.coin_market],
-  //       );
-  //       this.jobQueue.enqueue(job);
-  //     }
-  //   };
-  //   return setInterval(callback, time);
-  // }
+  // 한시간마다 작업 추가
+  @Cron('0 0 * * * *')
+  oneHourJobs() {
+    const keys = [JOB_NAME['DAY'], JOB_NAME['HOUR_4'], JOB_NAME['HOUR_1']];
+    this.addJobWrapper(keys, 2);
+  }
+
+  // 20초마다 작업 추가
+  @Interval(1000 * 20)
+  microJobAdd() {
+    const keys = [
+      JOB_NAME['MINUTE_15'],
+      JOB_NAME['MINUTE_10'],
+      JOB_NAME['MINUTE_5'],
+      JOB_NAME['MINUTE_3'],
+      JOB_NAME['MINUTE_1'],
+    ];
+    this.addJobWrapper(keys, 3);
+  }
 
   // 하루에 한번 업비트 캔들 초기화 시간에 맞춰 정보를 가져온다.
   @Cron('* * * * * *')
@@ -68,22 +82,16 @@ export class CoinScheduler implements OnModuleInit {
     console.log('****');
     console.log(new Date());
     console.log('job task : ', this.jobQueue.array);
-    console.log('attention market : ', this.attentionMarketService.array);
+    // console.log('attention market : ', this.attentionMarketService.array);
     console.log('****');
   }
 
-  @Cron('0 9 * * * *')
+  @Cron('0 0 9 * * *')
   async everyDayChecker() {
     const markets = await this.upbitApi.getMarkets();
     await this.coinService.saveCoins(markets);
     this.markets = await this.coinService.findAll();
+    const keys = [JOB_NAME['WEEK'], JOB_NAME['MONTH']];
+    this.addJobWrapper(keys, 1);
   }
-
-  // @Interval(300)
-  // async startJob() {
-  //   if (this.jobQueue.size === 0) return;
-  // const job = this.jobQueue.dequeue();
-  // const candles = await this.getCandleInfo(job);
-  // await this.candlesService.saveCandles(candles, JOB_NAME[job.jobName]);
-  // }
 }

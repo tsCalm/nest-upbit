@@ -35,6 +35,6 @@
 - 업비트 api 요청 횟수 제한으로 관심 코인 등록과 스케줄러의 작업이 겹칠 경우를 생각해야 한다.
   지금 생각으로는 TASK_JOB이 object가 아닌 array로 변경 후 item의 갯수를 4~5개로 제한해서 초당 4~5회 요청으로 변경해야한다.
 
-- 하나의 job_task에 15minute, 10minute, 5minute, 3minute, 1minute 작업을 수행하도록 한다.
+- 하나의 job_task에 15minute, 10minute, 5minute, 3minute, 1minute 작업을 수행하도록 한다. 20초에 한번씩 jobQueue에 추가
 
 - month, week는 하루에 한번 day, 4hour, 1hour 작업의 경우 1시간에 한번씩 불러와 저장한다.

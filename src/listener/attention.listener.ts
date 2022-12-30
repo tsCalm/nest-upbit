@@ -7,14 +7,14 @@ import { Queue } from 'src/queue';
 import { TaskJob } from 'src/queue/job';
 import { TaskJobWrapper } from 'src/queue/job-wrapper';
 import { AttentionMarket } from 'src/typeorm';
-import { TASK_JOB, ATTENTION_MARKET } from '../const';
+import { TASK_JOB_WRAPPER, ATTENTION_MARKET } from '../const';
 
 @Injectable()
 export class AttentionListener {
   constructor(
     @Inject(ATTENTION_MARKET)
     private readonly attentionMarketsQueue: Queue<AttentionMarket>,
-    @Inject(TASK_JOB) private readonly jobQueue: Queue<TaskJobWrapper>,
+    @Inject(TASK_JOB_WRAPPER) private readonly jobQueue: Queue<TaskJobWrapper>,
     private readonly taskJobService: TaskJob,
     private readonly jobWrapper: TaskJobWrapper,
     private readonly upbitApi: UpbitApi,
@@ -32,6 +32,7 @@ export class AttentionListener {
     const jobInstance = this.jobWrapper.instance(jobs, 1);
     this.attentionMarketsQueue.enqueue(attentionMarket);
     this.jobQueue.enqueue(jobInstance);
+    this.jobQueue.jobSort();
   }
 
   @OnEvent('attention.delete')

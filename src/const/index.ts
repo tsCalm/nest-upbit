@@ -1,2 +1,2 @@
 export const ATTENTION_MARKET = 'ATTENTION_MARKET';
-export const TASK_JOB = 'TASK_JOB';
+export const TASK_JOB_WRAPPER = 'TASK_JOB_WRAPPER';
