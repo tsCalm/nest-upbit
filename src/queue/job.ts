@@ -13,14 +13,15 @@ import { createQueryParam } from 'src/utils/task-job-function';
 
 @Injectable()
 export class TaskJob {
+  order: number;
   jobName: JOB_NAME;
   queryParam: string = '';
   coinName: MARKETS;
 
   // constructor(private readonly configService: ConfigService) {}
 
-  instance(jobName: JOB_NAME, coinName: MARKETS): TaskJob {
-    Object.assign(this, { jobName, coinName });
+  instance(jobName: JOB_NAME, coinName: MARKETS, order: number = 1): TaskJob {
+    Object.assign(this, { jobName, coinName, order });
     this.queryParam = createQueryParam(jobName, coinName, 10);
     return { ...this };
   }
