@@ -33,8 +33,10 @@
 - redis(in memory database - cache) 요약 : database보다 더 빠른 메모리(DRAM일 확률이 높음)에 자주 접근하고 덜 바뀌는 데이터를 저장하자!
 
 - 업비트 api 요청 횟수 제한으로 관심 코인 등록과 스케줄러의 작업이 겹칠 경우를 생각해야 한다.
-  지금 생각으로는 TASK_JOB이 object가 아닌 array로 변경 후 item의 갯수를 4~5개로 제한해서 초당 4~5회 요청으로 변경해야한다.
+  지금 생각으로는 TASK_JOB이 object가 아닌 array로 변경 후 item의 갯수를 4~5개로 제한해서 초당 4~5회 요청으로 변경해야한다. -> o
 
-- 하나의 job_task에 15minute, 10minute, 5minute, 3minute, 1minute 작업을 수행하도록 한다. 20초에 한번씩 jobQueue에 추가
+- 하나의 job_task에 15minute, 10minute, 5minute, 3minute, 1minute 작업을 수행하도록 한다. 20초에 한번씩 jobQueue에 추가 -> o
 
-- month, week는 하루에 한번 day, 4hour, 1hour 작업의 경우 1시간에 한번씩 불러와 저장한다.
+- month, week는 하루에 한번 day, 4hour, 1hour 작업의 경우 1시간에 한번씩 불러와 저장한다. -> o
+
+- Candle extends BaseEntity로 변경 후 데이터베이스에 해당 캔들 정보가 존재하는지 검사 후 존재한다면 덮어쓰고 없다면 새로 저장하는 방식으로 변경해야 함 업비트에서 보내주는 response에 primary키로 사용할만한 데이터가 존재하지 않음
