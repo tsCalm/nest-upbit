@@ -27,6 +27,7 @@ export class AttentionListener {
       this.taskJobService.instance(
         JOB_NAME[key],
         MARKETS[attentionMarket.coin_market],
+        200,
       ),
     );
     const jobInstance = this.jobWrapper.instance(jobs, 1);

@@ -19,9 +19,9 @@ export class TaskJob {
 
   // constructor(private readonly configService: ConfigService) {}
 
-  instance(jobName: JOB_NAME, coinName: MARKETS): TaskJob {
+  instance(jobName: JOB_NAME, coinName: MARKETS, count: number = 1): TaskJob {
     Object.assign(this, { jobName, coinName });
-    this.queryParam = createQueryParam(jobName, coinName, 10);
+    this.queryParam = createQueryParam(jobName, coinName, count);
     return { ...this };
   }
 }
