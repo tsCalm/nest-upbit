@@ -13,13 +13,13 @@ export class CandlesController {
   // }
   constructor(private candlesService: CandlesService) {}
 
-  @Get(':time/:unit')
-  getCandleInfo(
-    @Param('time') time: string,
-    @Param('unit', ParseIntPipe) unit: number,
-  ) {
-    return this.candlesService.getCandleInfo(time, unit);
-  }
+  // @Get(':time/:unit')
+  // getCandleInfo(
+  //   @Param('time') time: string,
+  //   @Param('unit', ParseIntPipe) unit: number,
+  // ) {
+  //   return this.candlesService.getCandleInfo(time, unit);
+  // }
 
   @Get('one')
   findOneMinutes() {

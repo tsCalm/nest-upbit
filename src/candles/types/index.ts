@@ -10,8 +10,12 @@
 //   candle_acc_trade_price: number; //누적 거래 금액
 //   candle_acc_trade_volume: number; //누적 거래량
 //   unit: number; // 분 단위(유닛)	Integer
+
+import { JOB_NAME } from 'src/enum';
+
 // }
 export interface IBaseCandle {
+  candle_type?: JOB_NAME;
   market: string;
   candle_date_time_utc: Date;
   candle_date_time_kst: Date;

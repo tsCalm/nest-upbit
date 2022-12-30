@@ -48,6 +48,7 @@ export class UpbitApi {
             const candles: Partial<IBaseCandle>[] = await this.getCandleInfo(
               job,
             );
+            candles.forEach((candle) => (candle.candle_type = job.jobName));
             if (!candles) rej();
             res(candles);
           });
@@ -64,9 +65,11 @@ export class UpbitApi {
       (promiseAllSettledResult) =>
         promiseAllSettledResult.status === 'fulfilled',
     );
-    return statusFulfilled.map(
-      (fulfilledItem: PromiseFulfilledResult<Partial<IBaseCandle>[]>) =>
-        fulfilledItem.value,
-    );
+    return statusFulfilled
+      .map(
+        (fulfilledItem: PromiseFulfilledResult<Partial<IBaseCandle>[]>) =>
+          fulfilledItem.value,
+      )
+      .flat();
   }
 }

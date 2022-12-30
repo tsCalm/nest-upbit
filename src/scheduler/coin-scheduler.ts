@@ -82,6 +82,11 @@ export class CoinScheduler implements OnModuleInit {
     console.log('****');
     console.log(new Date());
     console.log('job task : ', this.jobQueue.array);
+    if (this.jobQueue.size === 0) return;
+    const jobWrapper = this.jobQueue.dequeue();
+    const candles = await this.upbitApi.startJobWrapper(jobWrapper);
+    const temp = await this.candlesService.saveCandles(candles);
+    console.log('temp : ', temp);
     // console.log('attention market : ', this.attentionMarketService.array);
     console.log('****');
   }
