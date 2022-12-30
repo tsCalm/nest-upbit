@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { createQueryParam } from 'src/utils/task-job-function';
+import { TaskJob } from './job';
 
 // export interface IJob {
 //   jobName: JOB_NAME;
@@ -12,16 +13,12 @@ import { createQueryParam } from 'src/utils/task-job-function';
 // }
 
 @Injectable()
-export class TaskJob {
-  jobName: JOB_NAME;
-  queryParam: string = '';
-  coinName: MARKETS;
+export class TaskJobWrapper {
+  order: number;
+  arr: TaskJob[];
 
-  // constructor(private readonly configService: ConfigService) {}
-
-  instance(jobName: JOB_NAME, coinName: MARKETS): TaskJob {
-    Object.assign(this, { jobName, coinName });
-    this.queryParam = createQueryParam(jobName, coinName, 10);
+  instance(arr: TaskJob[], order: number = 1) {
+    Object.assign(this, { arr, order });
     return { ...this };
   }
 }

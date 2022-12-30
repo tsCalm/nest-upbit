@@ -32,10 +32,6 @@
 
 - redis(in memory database - cache) 요약 : database보다 더 빠른 메모리(DRAM일 확률이 높음)에 자주 접근하고 덜 바뀌는 데이터를 저장하자!
 
-- app에서 자동으로 처리하는 일을 taskJob이라는 클래스로 만들고 jobQueue를 만들어 scheduler가 매초 작업이 있는지 확인하고 작업이 있다면 자동으로 처리하도록 함
-
-- scheduler 선언에 있어 중복되는 코드가 너무 많아 방법을 생각중
-
 - 업비트 api 요청 횟수 제한으로 관심 코인 등록과 스케줄러의 작업이 겹칠 경우를 생각해야 한다.
   지금 생각으로는 TASK_JOB이 object가 아닌 array로 변경 후 item의 갯수를 4~5개로 제한해서 초당 4~5회 요청으로 변경해야한다.
 

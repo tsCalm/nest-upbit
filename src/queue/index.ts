@@ -14,10 +14,15 @@ export class Queue<T> {
 
   set setArray(array: T[]) {
     this.array = array;
+    this.sorting();
   }
 
+  public sorting() {
+    this.array.sort((a, b) => a.order - b.order);
+  }
   public enqueue(data: T) {
     this.array.push(data); // 배열에 요소를 추가한다
+    this.sorting();
   }
 
   public dequeue(): T {

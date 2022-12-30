@@ -70,12 +70,13 @@ export class CoinScheduler implements OnModuleInit {
     console.log('job task : ', this.jobQueue.array);
     console.log('attention market : ', this.attentionMarketService.array);
     console.log('****');
-    // await this.getCoins();
   }
 
   @Cron('0 9 * * * *')
   async everyDayChecker() {
-    // await this.getCoins();
+    const markets = await this.upbitApi.getMarkets();
+    await this.coinService.saveCoins(markets);
+    this.markets = await this.coinService.findAll();
   }
 
   // @Interval(300)
