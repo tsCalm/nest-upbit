@@ -22,25 +22,25 @@ export class AttentionListener {
 
   @OnEvent('attention.create')
   handleAttentionCreate(attentionMarket: AttentionMarket) {
-    const keys = Object.keys(JOB_NAME).filter((key) => !key.includes('MINUTE'));
-    const jobs = keys.map((key) =>
-      this.taskJobService.instance(
-        JOB_NAME[key],
-        MARKETS[attentionMarket.coin_market],
-        200,
-      ),
-    );
-    const jobInstance = this.jobWrapper.instance(jobs, 1);
+    // const keys = Object.keys(JOB_NAME).filter((key) => !key.includes('MINUTE'));
+    // const jobs = keys.map((key) =>
+    //   this.taskJobService.instance(
+    //     JOB_NAME[key],
+    //     MARKETS[attentionMarket.coin_market],
+    //     200,
+    //   ),
+    // );
+    // const jobInstance = this.jobWrapper.instance(jobs, 1);
     this.attentionMarketsQueue.enqueue(attentionMarket);
-    this.jobQueue.enqueue(jobInstance);
-    this.jobQueue.jobSort();
+    // this.jobQueue.enqueue(jobInstance);
+    // this.jobQueue.jobSort();
   }
 
   @OnEvent('attention.delete')
   handleAttentionDelete(attentionMarket: AttentionMarket) {
     const oldMarkets = this.attentionMarketsQueue.array;
     const newMarkets = oldMarkets.filter(
-      (market) => market.coin_market !== attentionMarket.coin_market,
+      (market) => market.market_name !== attentionMarket.market_name,
     );
     this.attentionMarketsQueue.array = newMarkets;
   }

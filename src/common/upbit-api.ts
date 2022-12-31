@@ -28,13 +28,13 @@ export class UpbitApi {
     return data;
   }
 
-  async getSTDInfo(market: AttentionMarket): Promise<Partial<IBaseCandle>[]> {
-    const URL = this.configService.get('UPBIT_URL');
-    const { data } = await axios.get(
-      `${URL}/months/merket=${market.coin_market}&count=200`,
-    );
-    return data;
-  }
+  // async getSTDInfo(market: AttentionMarket): Promise<Partial<IBaseCandle>[]> {
+  //   const URL = this.configService.get('UPBIT_URL');
+  //   const { data } = await axios.get(
+  //     `${URL}/months/merket=${market.coin_market}&count=200`,
+  //   );
+  //   return data;
+  // }
 
   async createdAttentionMarket(attentionMarket: AttentionMarket) {
     // const months= await this.getCandleInfo()

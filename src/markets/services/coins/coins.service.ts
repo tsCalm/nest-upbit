@@ -4,6 +4,7 @@ import { Market, AttentionMarket } from '../../../typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UpbitApi } from 'src/common/upbit-api';
+import { MARKETS } from 'src/enum';
 
 @Injectable()
 export class CoinsService {
@@ -39,26 +40,28 @@ export class CoinsService {
     return this.attentionCoinRepo.find();
   }
 
-  findAttentionCoin(market: string) {
+  findAttentionCoin(market: MARKETS) {
     return this.attentionCoinRepo.findOne({
       where: {
-        coin_market: market,
+        market: {
+          market,
+        },
       },
     });
   }
 
   // 관심 코인 등록 및 삭제
-  async saveAttentionCoin(market: string) {
-    const validateMarket = await this.findAttentionCoin(market);
+  async saveAttentionCoin(market: MARKETS) {
+    const findedMarket = await this.findAttentionCoin(market);
     let eventName = 'create';
-    let eventVal = validateMarket;
+    let eventVal = findedMarket;
     // 이미 관심코인인 경우 관심코인 목록에서 제거
-    if (validateMarket) {
-      await this.attentionCoinRepo.delete(validateMarket.id);
+    if (findedMarket) {
+      await this.attentionCoinRepo.delete(findedMarket.id);
       eventName = 'delete';
     } else {
       const newAttention = this.attentionCoinRepo.create({
-        coin_market: market,
+        market_name: market,
       });
       eventVal = await this.attentionCoinRepo.save(newAttention);
     }

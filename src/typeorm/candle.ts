@@ -7,7 +7,7 @@ export class Candle {
   @Column({ type: 'enum', enum: JOB_NAME, default: JOB_NAME.DAY })
   candle_type: JOB_NAME;
 
-  @Column({ type: 'varchar', default: '' })
+  @PrimaryColumn({ type: 'varchar', default: '' })
   candle_date_time_utc: Date; //캔들 기준 시각(UTC 기준)
 
   @Column({ type: 'varchar', default: '' })

@@ -15,6 +15,6 @@ export class AttentionCoinsController {
   saveAttentionCoin(
     @Param('market', new ParseEnumPipe(MARKETS)) market: string,
   ) {
-    return this.coinService.saveAttentionCoin(market);
+    // return this.coinService.saveAttentionCoin(market);
   }
 }

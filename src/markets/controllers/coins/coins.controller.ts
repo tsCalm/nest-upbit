@@ -18,7 +18,7 @@ export class CoinsController {
 
   @Post('attention/:market')
   saveAttentionCoin(
-    @Param('market', new ParseEnumPipe(MARKETS)) market: string,
+    @Param('market', new ParseEnumPipe(MARKETS)) market: MARKETS,
   ) {
     return this.coinService.saveAttentionCoin(market);
   }

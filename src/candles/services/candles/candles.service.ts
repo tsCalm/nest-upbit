@@ -51,12 +51,6 @@ export class CandlesService {
   }
 
   async saveCandles(candles: Partial<IBaseCandle>[]) {
-    // const candleInstance = candles.map((candle) => {
-    //   return this.candleRepo.create({
-    //     ...candle,
-    //     candle_type: jobName,
-    //   });
-    // });
     return await this.candleRepo.save(candles);
   }
 }

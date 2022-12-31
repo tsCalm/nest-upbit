@@ -81,7 +81,7 @@ export class CoinScheduler implements OnModuleInit {
   async everySecondChecker() {
     console.log('****');
     console.log(new Date());
-    console.log('job task : ', this.jobQueue.array);
+    console.log('attentionMarketService : ', this.attentionMarketService.array);
     if (this.jobQueue.size === 0) return;
     const jobWrapper = this.jobQueue.dequeue();
     const candles = await this.upbitApi.startJobWrapper(jobWrapper);
