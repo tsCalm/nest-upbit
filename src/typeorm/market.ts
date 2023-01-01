@@ -1,6 +1,13 @@
 import { MARKETS } from 'src/enum';
-import { Column, Entity, ManyToOne, OneToOne, PrimaryColumn } from 'typeorm';
-import { AttentionMarket } from './attention-market';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
+import { Candle } from './candle';
 
 @Entity()
 export class Market {
@@ -16,6 +23,9 @@ export class Market {
   @Column({ type: 'varchar', nullable: true, default: null })
   market_warning: string; //	유의 종목 여부
 
-  @OneToOne(() => AttentionMarket, (attention) => attention.market, {})
-  attention_coin: AttentionMarket;
+  @Column({ type: 'boolean', default: false })
+  attention: boolean;
+
+  @OneToMany(() => Candle, (candle) => candle.market)
+  candles: Candle[];
 }

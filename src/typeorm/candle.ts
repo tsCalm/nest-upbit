@@ -1,17 +1,22 @@
 import { JOB_NAME } from 'src/enum';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { BaseEntity } from './default';
+import { Market } from './market';
 
 @Entity()
-export class Candle {
-  @Column({ type: 'enum', enum: JOB_NAME, default: JOB_NAME.DAY })
-  candle_type: JOB_NAME;
+export class Candle extends BaseEntity {
+  @ManyToOne(() => Market, (market) => market.candles, {})
+  @JoinColumn({ name: 'market' })
+  marketEntity: Market;
 
-  @PrimaryColumn({ type: 'varchar', default: '' })
-  candle_date_time_utc: Date; //캔들 기준 시각(UTC 기준)
+  @Column({ type: 'varchar' })
+  market: string;
+
+  @Column({ type: 'varchar', default: 'DAY' })
+  candle_type: string;
 
   @Column({ type: 'varchar', default: '' })
-  market: string; //coinName
+  candle_date_time_utc: Date; //캔들 기준 시각(UTC 기준)
 
   @Column({ type: 'varchar', default: null })
   candle_date_time_kst: Date; //캔들 기준 시각(KST 기준)

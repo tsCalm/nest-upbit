@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Market, AttentionMarket } from '../../../typeorm';
+import { Market } from '../../../typeorm';
 import { Repository } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { UpbitApi } from 'src/common/upbit-api';
@@ -10,8 +10,6 @@ import { MARKETS } from 'src/enum';
 export class CoinsService {
   constructor(
     @InjectRepository(Market) private readonly coinRepo: Repository<Market>,
-    @InjectRepository(AttentionMarket)
-    private readonly attentionCoinRepo: Repository<AttentionMarket>,
     private eventEmitter: EventEmitter2,
     private readonly upbitApi: UpbitApi,
   ) {}
@@ -23,11 +21,8 @@ export class CoinsService {
   }
 
   // eventListener에서 감지하기 위한 이벤트를 정의
-  async createUpdatedEvent(
-    eventName: string,
-    attentionMarket: AttentionMarket,
-  ) {
-    this.eventEmitter.emit(`attention.${eventName}`, attentionMarket);
+  async createUpdatedEvent(eventName: string, market: Market) {
+    this.eventEmitter.emit(`attention.${eventName}`, market);
   }
 
   // 모든 코인 목록
@@ -37,15 +32,17 @@ export class CoinsService {
 
   // 관심 코인 목록
   findAllAttentionCoin() {
-    return this.attentionCoinRepo.find();
+    return this.coinRepo.find({
+      where: {
+        attention: true,
+      },
+    });
   }
 
   findAttentionCoin(market: MARKETS) {
-    return this.attentionCoinRepo.findOne({
+    return this.coinRepo.findOne({
       where: {
-        market: {
-          market,
-        },
+        market,
       },
     });
   }
@@ -56,17 +53,16 @@ export class CoinsService {
     let eventName = 'create';
     let eventVal = findedMarket;
     // 이미 관심코인인 경우 관심코인 목록에서 제거
-    if (findedMarket) {
-      await this.attentionCoinRepo.delete(findedMarket.id);
+    if (findedMarket.attention) {
       eventName = 'delete';
-    } else {
-      const newAttention = this.attentionCoinRepo.create({
-        market_name: market,
-      });
-      eventVal = await this.attentionCoinRepo.save(newAttention);
     }
+    await this.coinRepo.save({
+      ...findedMarket,
+      attention: !findedMarket.attention,
+    });
+
     const attentionMarkets = await this.findAllAttentionCoin();
-    this.createUpdatedEvent(eventName, eventVal);
+    this.createUpdatedEvent(eventName, findedMarket);
     return attentionMarkets;
   }
 }

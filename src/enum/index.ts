@@ -116,14 +116,14 @@ export enum MARKETS {
 
 export enum JOB_NAME {
   DAY = 'DAY',
-  WEEK = 'WEEK',
-  MONTH = 'MONTH',
+  // WEEK = 'WEEK',
+  // MONTH = 'MONTH',
   HOUR_4 = 'HOUR_4',
   HOUR_1 = 'HOUR_1',
-  MINUTE_30 = 'MINUTE_30',
-  MINUTE_15 = 'MINUTE_15',
-  MINUTE_10 = 'MINUTE_10',
-  MINUTE_5 = 'MINUTE_5',
-  MINUTE_3 = 'MINUTE_3',
-  MINUTE_1 = 'MINUTE_1',
+  // MINUTE_30 = 'MINUTE_30',
+  // MINUTE_15 = 'MINUTE_15',
+  // MINUTE_10 = 'MINUTE_10',
+  // MINUTE_5 = 'MINUTE_5',
+  // MINUTE_3 = 'MINUTE_3',
+  // MINUTE_1 = 'MINUTE_1',
 }

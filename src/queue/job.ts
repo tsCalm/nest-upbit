@@ -1,5 +1,4 @@
 import { JOB_NAME, MARKETS } from '../enum';
-import { IBaseCandle } from '../candles/types';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';

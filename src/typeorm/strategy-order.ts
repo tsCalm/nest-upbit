@@ -6,14 +6,13 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { AttentionMarket } from './attention-market';
 import { BaseEntity } from './default';
 
 @Entity()
 export class StrategyOrder extends BaseEntity {
-  @ManyToOne(() => AttentionMarket, (coin) => coin.strategy_orders, {})
-  @JoinColumn({ name: 'attention_market_id' })
-  attention_coin: AttentionMarket;
+  // @ManyToOne(() => AttentionMarket, (coin) => coin.strategy_orders, {})
+  // @JoinColumn({ name: 'attention_market_id' })
+  // attention_coin: AttentionMarket;
 
   @Column({ type: 'double', nullable: false })
   // 매수제한가격 - 이 가격 아래에서 매수해야한다.

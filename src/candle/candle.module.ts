@@ -10,4 +10,4 @@ import { CandlesService } from './services/candles/candles.service';
   providers: [CandlesService],
   exports: [CandlesService],
 })
-export class CandlesModule {}
+export class CandleModule {}
