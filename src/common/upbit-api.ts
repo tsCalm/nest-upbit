@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { OnEvent } from '@nestjs/event-emitter';
 import { SchedulerRegistry } from '@nestjs/schedule';
@@ -23,7 +23,10 @@ export class UpbitApi {
   // scheduler에서 사용
   async getCandleInfo(job: TaskJob): Promise<Partial<Candle>[]> {
     const URL = this.configService.get('UPBIT_URL');
-    const { data } = await axios.get(`${URL}/${job.queryParam}`);
+    const { data, status, statusText } = await axios.get(
+      `${URL}/${job.queryParam}`,
+    );
+    if (!data) throw new HttpException(statusText, status);
     return data;
   }
   // async getSTDInfo(market: AttentionMarket): Promise<Partial<IBaseCandle>[]> {

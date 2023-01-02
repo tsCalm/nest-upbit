@@ -14,9 +14,10 @@ export class CandlesService {
   }
 
   async deleteCandles(market: Market) {
-    const result: DeleteResult = await this.candleRepo.delete({
-      market: market.market,
-    });
-    return result;
+    // 캔들 중복 저장 테스트 성공으로 과거 캔들을 삭제할 필요가 없음
+    // const result: DeleteResult = await this.candleRepo.delete({
+    //   market: market.market,
+    // });
+    // return result;
   }
 }

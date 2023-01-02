@@ -116,8 +116,8 @@ export enum MARKETS {
 
 export enum JOB_NAME {
   DAY = 'DAY',
-  // WEEK = 'WEEK',
-  // MONTH = 'MONTH',
+  WEEK = 'WEEK',
+  MONTH = 'MONTH',
   HOUR_4 = 'HOUR_4',
   HOUR_1 = 'HOUR_1',
   // MINUTE_30 = 'MINUTE_30',

@@ -16,8 +16,13 @@ export class TaskJob {
   queryParam: string = '';
   coinName: MARKETS;
 
-  // constructor(private readonly configService: ConfigService) {}
-
+  /**
+   *
+   * @param jobName 캔들타입과 잡 이름 예) DAY, HOUR_4
+   * @param coinName 코인이름 예) KRW-BTC
+   * @param count upbit에 요청할 캔들 수
+   * @returns
+   */
   instance(jobName: JOB_NAME, coinName: MARKETS, count: number = 1): TaskJob {
     Object.assign(this, { jobName, coinName });
     this.queryParam = createQueryParam(jobName, coinName, count);

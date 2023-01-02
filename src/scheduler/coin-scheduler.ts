@@ -31,9 +31,6 @@ export class CoinScheduler implements OnModuleInit {
     private eventEmitter: EventEmitter2,
   ) {}
   async onModuleInit() {
-    // const attentionCoins: AttentionMarket[] =
-    //   await this.coinService.findAllAttentionCoin();
-    // this.attentionMarketService.array = attentionCoins;
     const markets = await this.upbitApi.getMarkets();
     await this.coinService.saveCoins(markets);
     this.markets = await this.coinService.findAll();
@@ -83,6 +80,7 @@ export class CoinScheduler implements OnModuleInit {
     // console.log('attention market : ', this.attentionMarketService.array);
     console.log('****');
   }
+
   // @Cron('0 0 9 * * *')
   // async everyDayChecker() {
   //   const markets = await this.upbitApi.getMarkets();

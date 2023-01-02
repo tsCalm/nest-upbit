@@ -15,7 +15,9 @@ export class Queue<T> {
   set setArray(array: T[]) {
     this.array = array;
   }
-
+  /**
+   * 작업의 우선순위를 기준으로 정렬
+   */
   public jobSort() {
     this.array.sort((a, b) => a.order - b.order);
   }

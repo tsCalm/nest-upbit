@@ -25,12 +25,12 @@ export class AttentionListener {
 
   @OnEvent('attention.create')
   handleAttentionCreate(market: Market) {
-    const keys = Object.keys(JOB_NAME);
-
+    const keys = Object.keys(JOB_NAME).filter((key) => !key.includes('MINUTE'));
+    console.log('keys : ', keys);
     const jobs = keys.map((key) =>
-      this.taskJobService.instance(JOB_NAME[key], MARKETS[market.market], 1),
+      this.taskJobService.instance(JOB_NAME[key], MARKETS[market.market], 200),
     );
-    const jobInstance = this.jobWrapper.instance(jobs, 1);
+    const jobInstance = this.jobWrapper.instance(jobs, 2);
     this.jobQueue.enqueue(jobInstance);
     this.jobQueue.jobSort();
   }
