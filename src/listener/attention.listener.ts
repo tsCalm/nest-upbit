@@ -28,7 +28,7 @@ export class AttentionListener {
     const keys = Object.keys(JOB_NAME);
 
     const jobs = keys.map((key) =>
-      this.taskJobService.instance(JOB_NAME[key], MARKETS[market.market], 200),
+      this.taskJobService.instance(JOB_NAME[key], MARKETS[market.market], 1),
     );
     const jobInstance = this.jobWrapper.instance(jobs, 1);
     this.jobQueue.enqueue(jobInstance);
