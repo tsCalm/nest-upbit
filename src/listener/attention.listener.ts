@@ -18,25 +18,32 @@ export class AttentionListener {
     private readonly marketQueue: Queue<Market>,
     @Inject(TASK_JOB_WRAPPER) private readonly jobQueue: Queue<TaskJobWrapper>,
     private readonly taskJobService: TaskJob,
-    private readonly jobWrapper: TaskJobWrapper,
-    private readonly upbitApi: UpbitApi,
-    private readonly candleService: CandlesService,
-  ) {}
+    private readonly jobWrapper: TaskJobWrapper, // private readonly upbitApi: UpbitApi,
+  ) // private readonly candleService: CandlesService,
+  {}
 
   @OnEvent('attention.create')
   handleAttentionCreate(market: Market) {
+    // 분 단위 캔들을 제외한 모든 캔들을 저장
     const keys = Object.keys(JOB_NAME).filter((key) => !key.includes('MINUTE'));
-    console.log('keys : ', keys);
     const jobs = keys.map((key) =>
       this.taskJobService.instance(JOB_NAME[key], MARKETS[market.market], 200),
     );
     const jobInstance = this.jobWrapper.instance(jobs, 2);
     this.jobQueue.enqueue(jobInstance);
     this.jobQueue.jobSort();
+    const findedMarket = this.marketQueue.array.find(
+      (market_) => market_.market === market.market,
+    );
+    findedMarket.attention = true;
   }
 
   @OnEvent('attention.delete')
   handleAttentionDelete(market: Market) {
-    this.candleService.deleteCandles(market);
+    const findedMarket = this.marketQueue.array.find(
+      (market_) => (market_.market = market.market),
+    );
+    findedMarket.attention = false;
+    // this.candleService.deleteCandles(market);
   }
 }

@@ -16,11 +16,10 @@ import { CandlesService } from 'src/candle/services/candles/candles.service';
 
 @Injectable()
 export class CoinScheduler implements OnModuleInit {
-  private markets: Market[] = [];
   constructor(
     @Inject(TASK_JOB_WRAPPER) private readonly jobQueue: Queue<TaskJobWrapper>,
-    // @Inject(MARKET)
-    // private readonly attentionMarketService: Queue<AttentionMarket>,
+    @Inject(MARKET)
+    private readonly marketQueue: Queue<Market>,
     private readonly configService: ConfigService,
     private schedulerRegistry: SchedulerRegistry,
     private readonly coinService: CoinsService,
@@ -33,7 +32,7 @@ export class CoinScheduler implements OnModuleInit {
   async onModuleInit() {
     const markets = await this.upbitApi.getMarkets();
     await this.coinService.saveCoins(markets);
-    this.markets = await this.coinService.findAll();
+    this.marketQueue.setArray = await this.coinService.findAll();
   }
   // // 스케줄러 작업 추가 함수
   // addJobWrapper(keys: JOB_NAME[], order: number = 3) {
