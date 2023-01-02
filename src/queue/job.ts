@@ -23,7 +23,7 @@ export class TaskJob {
    * @param count upbit에 요청할 캔들 수
    * @returns
    */
-  instance(jobName: JOB_NAME, coinName: MARKETS, count: number = 1): TaskJob {
+  instance(jobName: JOB_NAME, coinName: MARKETS, count: number = 2): TaskJob {
     Object.assign(this, { jobName, coinName });
     this.queryParam = createQueryParam(jobName, coinName, count);
     return { ...this };

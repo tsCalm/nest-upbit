@@ -22,11 +22,20 @@ export class UpbitApi {
   }
   // scheduler에서 사용
   async getCandleInfo(job: TaskJob): Promise<Partial<Candle>[]> {
+    if (!job || !job.coinName || !job.queryParam) {
+      console.error(
+        `job: coinName: ${job.coinName}, queryParam: ${job.queryParam} 중 하나가 존재하지 않습니다.`,
+      );
+      return [];
+    }
     const URL = this.configService.get('UPBIT_URL');
     const { data, status, statusText } = await axios.get(
       `${URL}/${job.queryParam}`,
     );
-    if (!data) throw new HttpException(statusText, status);
+    if (!data) {
+      console.log(status, statusText);
+      // throw new HttpException(statusText, status);
+    }
     return data;
   }
   // async getSTDInfo(market: AttentionMarket): Promise<Partial<IBaseCandle>[]> {
@@ -47,9 +56,10 @@ export class UpbitApi {
         jobWrap.arr.map((job) => {
           return new Promise<Partial<Candle>[]>(async (res, rej) => {
             const candles: Partial<Candle>[] = await this.getCandleInfo(job);
-            candles.forEach((candle) => (candle.candle_type = job.jobName));
-            if (!candles) rej();
-            res(candles);
+            const fCandles = candles.filter((candle) => candle);
+            fCandles.forEach((candle) => (candle.candle_type = job.jobName));
+            if (!fCandles) rej();
+            res(fCandles);
           });
         }),
       );
