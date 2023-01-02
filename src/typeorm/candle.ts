@@ -4,18 +4,18 @@ import { BaseEntity } from './default';
 import { Market } from './market';
 
 @Entity()
-export class Candle extends BaseEntity {
+export class Candle {
   @ManyToOne(() => Market, (market) => market.candles, {})
   @JoinColumn({ name: 'market' })
   marketEntity: Market;
 
-  @Column({ type: 'varchar' })
+  @PrimaryColumn({ type: 'varchar' })
   market: string;
 
-  @Column({ type: 'varchar', default: 'DAY' })
+  @PrimaryColumn({ type: 'varchar', default: 'DAY' })
   candle_type: string;
 
-  @Column({ type: 'varchar', default: '' })
+  @PrimaryColumn({ type: 'varchar', default: '' })
   candle_date_time_utc: Date; //캔들 기준 시각(UTC 기준)
 
   @Column({ type: 'varchar', default: null })
