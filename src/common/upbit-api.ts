@@ -7,6 +7,7 @@ import { Queue } from 'src/queue';
 import { TaskJob } from 'src/queue/job';
 import { TaskJobWrapper } from 'src/queue/job-wrapper';
 import { Candle, Market } from 'src/typeorm';
+import { getDayOfWeek } from 'src/utils/formatter';
 // import { AttentionMarket, Market } from 'src/typeorm';
 
 @Injectable()
@@ -29,14 +30,17 @@ export class UpbitApi {
       return [];
     }
     const URL = this.configService.get('UPBIT_URL');
-    const { data, status, statusText } = await axios.get(
-      `${URL}/${job.queryParam}`,
-    );
-    if (!data) {
-      console.log(status, statusText);
-      // throw new HttpException(statusText, status);
-    }
-    return data;
+    const result = await axios
+      .get(`${URL}/${job.queryParam}`)
+      .then((res) => {
+        const { data } = res;
+        return data;
+      })
+      .catch((err) => {
+        return [];
+      });
+    // console.log(status, statusText);
+    return result;
   }
   // async getSTDInfo(market: AttentionMarket): Promise<Partial<IBaseCandle>[]> {
   //   const URL = this.configService.get('UPBIT_URL');
@@ -57,7 +61,10 @@ export class UpbitApi {
           return new Promise<Partial<Candle>[]>(async (res, rej) => {
             const candles: Partial<Candle>[] = await this.getCandleInfo(job);
             const fCandles = candles.filter((candle) => candle);
-            fCandles.forEach((candle) => (candle.candle_type = job.jobName));
+            fCandles.forEach((candle) => {
+              candle.candle_type = job.jobName;
+              candle.day_of_week = getDayOfWeek(candle.candle_date_time_kst);
+            });
             if (!fCandles) rej();
             res(fCandles);
           });

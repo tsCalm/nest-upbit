@@ -127,3 +127,13 @@ export enum JOB_NAME {
   MINUTE_3 = 'MINUTE_3',
   MINUTE_1 = 'MINUTE_1',
 }
+
+export enum DAY_OF_WEEK {
+  MON,
+  TUE,
+  WED,
+  THU,
+  FRI,
+  SAT,
+  SUN,
+}

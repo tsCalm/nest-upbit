@@ -75,13 +75,10 @@ export class CoinScheduler implements OnModuleInit {
   // 하루에 한번 업비트 캔들 초기화 시간에 맞춰 정보를 가져온다.
   @Cron('* * * * * *')
   async everySecondChecker() {
-    console.log('****');
-    console.log(new Date());
     if (this.jobQueue.size === 0) return;
     const jobWrapper = this.jobQueue.dequeue();
     const candles = await this.upbitApi.startJobWrapper(jobWrapper);
     const temp = await this.candlesService.saveCandles(candles);
-    console.log('****');
   }
 
   @Cron('0 1 9 * * *')

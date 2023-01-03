@@ -9,17 +9,20 @@ export class Candle {
   @JoinColumn({ name: 'market' })
   marketEntity: Market;
 
-  @PrimaryColumn({ type: 'varchar' })
-  market: string;
-
   @PrimaryColumn({ type: 'varchar', default: 'DAY' })
   candle_type: string;
 
+  @PrimaryColumn({ type: 'varchar' })
+  market: string;
+
   @PrimaryColumn({ type: 'varchar', default: '' })
-  candle_date_time_utc: Date; //캔들 기준 시각(UTC 기준)
+  candle_date_time_utc: string; //캔들 기준 시각(UTC 기준)
 
   @Column({ type: 'varchar', default: null })
-  candle_date_time_kst: Date; //캔들 기준 시각(KST 기준)
+  candle_date_time_kst: string; //캔들 기준 시각(KST 기준)
+
+  @Column({ type: 'int', default: null })
+  day_of_week: number;
 
   @Column({ type: 'double' })
   opening_price: number; //시가
@@ -33,7 +36,7 @@ export class Candle {
   @Column({ type: 'double' })
   trade_price: number; // 종가
 
-  @Column({ type: 'longblob' })
+  @Column({ type: 'bigint' })
   timestamp: number; //해당 캔들에서 마지막 틱이 저장된 시각
 
   @Column({ type: 'double' })

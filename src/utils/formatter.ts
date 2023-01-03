@@ -16,3 +16,7 @@ export const localeDateOption: Intl.DateTimeFormatOptions = {
 export const cvPriveToKo = (candle_price: number) => {
   return `${numFormater.format(candle_price)}원`;
 };
+
+export const getDayOfWeek = (toStringDate: string) => {
+  return new Date(toStringDate).getDay();
+};
